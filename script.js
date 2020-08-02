@@ -2,9 +2,12 @@ const urls = {
     random: 'https://picsum.photos/600/400',
 };
 
-const imageContainer = document.getElementById('image-container');
-const medianСontainer = document.getElementById('median-container');
-const kMeansСontainer = document.getElementById('k-means-container');
+const containers = {
+    content: document.getElementById('content'),
+    image: document.getElementById('image-container'),
+    median: document.getElementById('median-container'),
+    kMeans: document.getElementById('k-means-container'),
+}
 const controls = {
     randomButton: document.getElementById('control-random'),
     uploadButton: document.getElementById('control-upload'),
@@ -31,8 +34,8 @@ function loadImage(url, onSuccess) {
         onSuccess(this);
     }
     imageElement.src = url;
-    imageContainer.innerHTML = '';
-    imageContainer.appendChild(imageElement);
+    containers.image.innerHTML = '';
+    containers.image.appendChild(imageElement);
 }
 
 function loadImagePixels(url, onSuccess) {
@@ -111,7 +114,7 @@ function createColorElement(pixel) {
     return element;
 }
 
-function updateColors(clusters, containerName) {
+function updateColors(clusters, container) {
     const fragment = document.createDocumentFragment();
     clusters.forEach((cluster, index) => {
         const pixel = getAverageClusterColor(cluster);
@@ -119,23 +122,27 @@ function updateColors(clusters, containerName) {
         fragment.appendChild(colorElement);
 
         if (index === 0) {
-            document.body.style.background = getHexColor(pixel);
+            const mainColorHex = getHexColor(pixel);
+            const mainColorLightness = getColorLightness(pixel);
+            document.body.style.background = mainColorHex;
+            mainColorLightness > 0.5
+                ? containers.content.classList.add('content_dark')
+                : containers.content.classList.remove('content_dark');
         }
     });
 
-    const container = document.getElementById(containerName);
     container.innerHTML = '';
     container.appendChild(fragment);
 }
 
 function generateMedianCut(pixels) {
     const clusters = MedianCutClusterizer.getClusters(pixels, 2);
-    updateColors(clusters, 'median-container');
+    updateColors(clusters, containers.median);
 }
 
 function generateKMeansColors(pixels) {
     const clusters = KMeansClusterizer.getClusters(pixels, 4, 1);
-    updateColors(clusters, 'k-means-container');
+    updateColors(clusters, containers.kMeans);
 }
 
 function setImage(url) {

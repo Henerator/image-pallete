@@ -41,7 +41,9 @@ class KMeansClusterizer {
             });
         }
 
-        return clusters.map(cluster => cluster.pixels);
+        return clusters
+            .filter(cluster => cluster.pixels.length > 0)
+            .map(cluster => cluster.pixels);
     }
 
     static getDistance(a, b) {

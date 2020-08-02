@@ -44,8 +44,12 @@ body {
     font-size: 16px;
     font-weight: bold;
     color: white;
-    text-shadow: #222 0 0 2px;
+    text-transform: uppercase;
     cursor: pointer;
+}
+
+.color-item.color-item_dark {
+    color: #222;
 }
 
 .color-item:after {

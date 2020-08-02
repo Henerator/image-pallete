@@ -76,6 +76,17 @@ function getAverageClusterColor(cluster) {
         .map(value => Math.floor(value / cluster.length));
 }
 
+function getColorLightness([r, g, b]) {
+    const cr = r / 255;
+    const cg = g / 255;
+    const cb = b / 255;
+
+    const cmin = Math.min(cr, cg, cb);
+    const cmax = Math.max(cr, cg, cb);
+
+    return (cmax + cmin) / 2;
+}
+
 function getHexColor(pixel) {
     const hexValue = pixel.map(value => value.toString(16).padStart(2, '0'))
         .join('')
@@ -89,11 +100,13 @@ function getRGBColor([r, g, b]) {
 function createColorElement(pixel) {
     const hexString = getHexColor(pixel);
     const rgbString = getRGBColor(pixel);
+    const colorLightness = getColorLightness(pixel);
     const element = document.createElement('div');
     element.addEventListener('click', () => copyToClipboard(hexString));
     element.innerText = hexString;
-    element.classList.add('color-item');
     element.style.background = rgbString;
+    element.classList.add('color-item');
+    colorLightness > 0.5 && element.classList.add('color-item_dark');
 
     return element;
 }
@@ -137,7 +150,7 @@ function setRandomImage() {
     setImage(imageLink);
 }
 
-controls.fileInput.addEventListener('change', function() {
+controls.fileInput.addEventListener('change', function () {
     if (this.files && this.files[0]) {
         const url = URL.createObjectURL(this.files[0]);
         setImage(url);

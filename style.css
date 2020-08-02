@@ -1,3 +1,8 @@
+:root {
+    --color-text-light: #fff;
+    --color-text-dark: var(--color-text-dark);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -20,18 +25,34 @@ body {
     transition: background 1s ease;
 }
 
+.body_theme_dark .content {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.body_theme_dark .controls {
+    color: var(--color-text-dark);
+}
+
+.body_theme_dark .gratitude {
+    color: var(--color-text-dark);
+}
+
+.body_theme_dark .gratitude a {
+    color: var(--color-text-dark);
+}
+
 .gratitude {
     position: fixed;
     top: 0;
     right: 0;
     padding: 12px;
-    color: white;
+    color: var(--color-text-light);
     font-size: 12px;
-    text-shadow: #222 0 0 2px;
+    text-shadow: var(--color-text-dark) 0 0 2px;
 }
 
 .gratitude a {
-    color: white;
+    color: var(--color-text-light);
 }
 
 .content {
@@ -42,10 +63,6 @@ body {
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
     overflow: hidden;
     transition: all 1s ease;
-}
-
-.content.content_dark {
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
 .colors-container {
@@ -61,17 +78,17 @@ body {
     padding: 18px;
     font-size: 16px;
     font-weight: bold;
-    color: white;
+    color: var(--color-text-light);
     text-transform: uppercase;
     cursor: pointer;
 }
 
 .color-item.color-item_dark {
-    color: #222;
+    color: var(--color-text-dark);
 }
 
 .color-item:after {
-    content: 'Click to copy';
+    content: "Click to copy";
     position: absolute;
     right: 6px;
     bottom: 6px;
@@ -100,13 +117,13 @@ img {
     left: 50%;
     bottom: 0;
     transform: translate(-50%);
+    color: var(--color-text-light);
+    font-size: 16px;
+    transition: color 1s ease;
 }
 
 .control_item {
     padding: 12px;
-    color: white;
-    font-size: 16px;
-    text-shadow: #222 0 0 2px;
     cursor: pointer;
 }
 

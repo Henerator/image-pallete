@@ -130,8 +130,8 @@ function updateColors(clusters) {
             const mainColorLightness = getColorLightness(pixel);
             document.body.style.background = mainColorHex;
             mainColorLightness > 0.5
-                ? containers.content.classList.add('content_dark')
-                : containers.content.classList.remove('content_dark');
+                ? document.body.classList.add('body_theme_dark')
+                : document.body.classList.remove('body_theme_dark');
         }
     });
 

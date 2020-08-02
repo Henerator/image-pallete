@@ -1,17 +1,8 @@
-const urls = [
-    'https://picsum.photos/600/400',
-    'https://i.picsum.photos/id/447/720/800.jpg?hmac=u3EH7wVElkIJ8d9SxEesc5Pp7ZVcu0NQWNEM9MwSk7w',
-    'https://i.picsum.photos/id/131/720/800.jpg?hmac=D5DbSLu0Hi-cCiRvSJAtgDALs85Z1nVWQ3AI2trC29E',
-    'https://images.pexels.com/photos/807598/pexels-photo-807598.jpeg',
-    'https://cdn.pixabay.com/photo/2020/06/02/01/33/sakura-5248955__340.jpg',
-    'https://cdn.pixabay.com/photo/2017/08/30/01/05/milky-way-2695569_960_720.jpg',
-    'https://images.freeimages.com/images/small-previews/199/sunflowers-6-1392951.jpg',
-    'https://images.pexels.com/photos/3026368/pexels-photo-3026368.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-    'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg',
-    'https://cdn.pixabay.com/photo/2016/04/25/18/07/halcyon-1352522_960_720.jpg',
-    'https://cdn.pixabay.com/photo/2020/06/13/03/39/lotus-5292554_960_720.jpg',
-    'https://cdn.pixabay.com/photo/2020/06/02/01/33/sakura-5248955_960_720.jpg',
-];
+const urls = {
+    random: 'https://picsum.photos/600/400',
+    cosmos: 'images/cosmos.jpg',
+};
+    
 
 const imageContainer = document.getElementById('image-container');
 const medianСontainer = document.getElementById('median-container');
@@ -129,14 +120,19 @@ function generateKMeansColors(pixels) {
     updateColors(clusters, 'k-means-container');
 }
 
-function getRandomImage() {
-    const imageLink = `${urls[0]}?id=${Math.random() * 999999}`;
-    loadImagePixels(imageLink, pixels => {
-        generateMedianCut(pixels);
-        // generateKMeansColors(pixels);
+function setImage(url) {
+    loadImagePixels(url, pixels => {
+        // generateMedianCut(pixels);
+        generateKMeansColors(pixels);
     });
 }
 
-controls.random.addEventListener('click', () => getRandomImage());
+function setRandomImage() {
+    const imageLink = `${urls.random}?id=${Math.random() * 999999}`;
+    setImage(imageLink);
+}
 
-getRandomImage();
+controls.random.addEventListener('click', () => setRandomImage());
+
+setRandomImage();
+// setImage(urls.cosmos);

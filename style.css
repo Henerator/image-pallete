@@ -21,6 +21,8 @@ body {
 }
 
 .content {
+    width: 80%;
+    max-width: 810px;
     height: 400px;
     display: flex;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
@@ -30,10 +32,11 @@ body {
 .colors-container {
     display: flex;
     flex-direction: column;
-    width: 240px;
+    width: 210px;
 }
 
 .color-item {
+    position: relative;
     flex-grow: 1;
     padding: 18px;
     background: rgb(109, 141, 162);
@@ -44,19 +47,27 @@ body {
     cursor: pointer;
 }
 
-.color-item:hover {
-    box-shadow: inset 0 0 2px 0 white;
+.color-item:after {
+    content: 'Click to copy';
+    position: absolute;
+    right: 6px;
+    bottom: 6px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.color-item:hover::after {
+    opacity: 0.7;
 }
 
 .image-container {
     flex-grow: 1;
-    width: 600px;
 }
 
 img {
-    object-fit: cover;
+    width: 100%;
     height: 100%;
-    max-width: 100%;
+    object-fit: cover;
 }
 
 .controls {
@@ -73,4 +84,27 @@ img {
     font-size: 16px;
     text-shadow: #222 0 0 2px;
     cursor: pointer;
+}
+
+@media (max-width: 600px) {
+    .content {
+        flex-direction: column;
+    }
+
+    .colors-container {
+        width: 100%;
+        flex-direction: row;
+    }
+
+    .color-item {
+        text-align: center;
+    }
+
+    .color-item:after {
+        right: 0;
+        bottom: 2px;
+        width: 100%;
+        font-size: 10px;
+        text-align: center;
+    }
 }

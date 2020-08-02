@@ -5,8 +5,7 @@ const urls = {
 const containers = {
     content: document.getElementById('content'),
     image: document.getElementById('image-container'),
-    median: document.getElementById('median-container'),
-    kMeans: document.getElementById('k-means-container'),
+    colors: document.getElementById('colors-container'),
 }
 const controls = {
     randomButton: document.getElementById('control-random'),
@@ -54,8 +53,8 @@ function loadImagePixels(url, onSuccess) {
         const pixels = [];
         const countPixels = imageData.width * imageData.height;
 
-        const ratioCuntPixels = 600 * 400;
-        const ratio = Math.min(Math.floor(countPixels / ratioCuntPixels), 5);
+        const ratioCountPixels = 600 * 400;
+        const ratio = Math.min(Math.floor(countPixels / ratioCountPixels), 5);
         const pixelStep = Math.pow(2, ratio);
 
         for (let x = 0; x < countPixels; x += pixelStep) {
@@ -114,7 +113,7 @@ function createColorElement(pixel) {
     return element;
 }
 
-function updateColors(clusters, container) {
+function updateColors(clusters) {
     const fragment = document.createDocumentFragment();
     clusters.forEach((cluster, index) => {
         const pixel = getAverageClusterColor(cluster);
@@ -131,18 +130,18 @@ function updateColors(clusters, container) {
         }
     });
 
-    container.innerHTML = '';
-    container.appendChild(fragment);
+    containers.colors.innerHTML = '';
+    containers.colors.appendChild(fragment);
 }
 
 function generateMedianCut(pixels) {
     const clusters = MedianCutClusterizer.getClusters(pixels, 2);
-    updateColors(clusters, containers.median);
+    updateColors(clusters);
 }
 
 function generateKMeansColors(pixels) {
     const clusters = KMeansClusterizer.getClusters(pixels, 4, 1);
-    updateColors(clusters, containers.kMeans);
+    updateColors(clusters);
 }
 
 function setImage(url) {

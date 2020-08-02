@@ -144,10 +144,16 @@ function generateKMeansColors(pixels) {
     updateColors(clusters);
 }
 
+function generateHistogramColors(pixels) {
+    const clusters = Histogram.getClusters(pixels);
+    updateColors(clusters);
+}
+
 function setImage(url) {
     loadImagePixels(url, pixels => {
         // generateMedianCut(pixels);
-        generateKMeansColors(pixels);
+        // generateKMeansColors(pixels);
+        generateHistogramColors(pixels);
     });
 }
 

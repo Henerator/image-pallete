@@ -1,6 +1,6 @@
 :root {
     --color-text-light: #fff;
-    --color-text-dark: var(--color-text-dark);
+    --color-text-dark: #222;
 }
 
 * {
@@ -41,6 +41,10 @@ body {
     color: var(--color-text-dark);
 }
 
+.body_theme_dark .control_divider {
+    background: var(--color-text-dark);
+}
+
 .gratitude {
     position: fixed;
     top: 0;
@@ -48,7 +52,6 @@ body {
     padding: 12px;
     color: var(--color-text-light);
     font-size: 12px;
-    text-shadow: var(--color-text-dark) 0 0 2px;
 }
 
 .gratitude a {
@@ -119,12 +122,22 @@ img {
     transform: translate(-50%);
     color: var(--color-text-light);
     font-size: 16px;
+    white-space: nowrap;
     transition: color 1s ease;
 }
 
 .control_item {
     padding: 12px;
     cursor: pointer;
+}
+
+.control_divider {
+    width: 1px;
+    height: 20px;
+    margin: 0 12px;
+    align-self: center;
+    background: var(--color-text-light);
+    transition: background 1s ease;
 }
 
 @media (max-width: 600px) {

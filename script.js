@@ -10,6 +10,9 @@ const containers = {
 const controls = {
     randomButton: document.getElementById('control-random'),
     uploadButton: document.getElementById('control-upload'),
+    medianCutButton: document.getElementById('control-median-cut'),
+    kMeansButton: document.getElementById('control-k-means'),
+    histogramButton: document.getElementById('control-histogram'),
     fileInput: document.getElementById('file-input'),
 }
 
@@ -37,37 +40,39 @@ function loadImage(url, onSuccess) {
     containers.image.appendChild(imageElement);
 }
 
-function loadImagePixels(url, onSuccess) {
-    loadImage(url, (image) => {
-        const width = image.naturalWidth;
-        const height = image.naturalHeight;
+function getCurrentImage() {
+    return containers.image.getElementsByTagName('img')[0];
+}
 
-        const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
+function getImagePixels(image) {
+    const width = image.naturalWidth;
+    const height = image.naturalHeight;
 
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(image, 0, 0);
-        const imageData = ctx.getImageData(0, 0, width, height);
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
 
-        const pixels = [];
-        const countPixels = imageData.width * imageData.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(image, 0, 0);
+    const imageData = ctx.getImageData(0, 0, width, height);
 
-        const ratioCountPixels = 600 * 400;
-        const ratio = Math.min(Math.floor(countPixels / ratioCountPixels), 5);
-        const pixelStep = Math.pow(2, ratio);
+    const pixels = [];
+    const countPixels = imageData.width * imageData.height;
 
-        for (let x = 0; x < countPixels; x += pixelStep) {
-            const index = x * 4;
-            pixels.push([
-                imageData.data[index],
-                imageData.data[index + 1],
-                imageData.data[index + 2],
-            ]);
-        }
+    const ratioCountPixels = 600 * 400;
+    const ratio = Math.min(Math.floor(countPixels / ratioCountPixels), 5);
+    const pixelStep = Math.pow(2, ratio);
 
-        onSuccess(pixels);
-    });
+    for (let x = 0; x < countPixels; x += pixelStep) {
+        const index = x * 4;
+        pixels.push([
+            imageData.data[index],
+            imageData.data[index + 1],
+            imageData.data[index + 2],
+        ]);
+    }
+
+    return pixels;
 }
 
 function getAverageClusterColor(cluster) {
@@ -149,23 +154,36 @@ function generateHistogramColors(pixels) {
     updateColors(clusters);
 }
 
-function setImage(url) {
-    loadImagePixels(url, pixels => {
-        // generateMedianCut(pixels);
-        // generateKMeansColors(pixels);
-        generateHistogramColors(pixels);
+function applyMedianCut(image) {
+    const pixels = getImagePixels(image);
+    generateMedianCut(pixels);
+}
+
+function applyKMeans(image) {
+    const pixels = getImagePixels(image);
+    generateKMeansColors(pixels);
+}
+
+function applyHistogram(image) {
+    const pixels = getImagePixels(image);
+    generateHistogramColors(pixels);
+}
+
+function setImageLink(url) {
+    loadImage(url, image => {
+        applyHistogram(image);
     });
 }
 
 function setRandomImage() {
     const imageLink = `${urls.random}?id=${Math.random() * 999999}`;
-    setImage(imageLink);
+    setImageLink(imageLink);
 }
 
 controls.fileInput.addEventListener('change', function () {
     if (this.files && this.files[0]) {
         const url = URL.createObjectURL(this.files[0]);
-        setImage(url);
+        setImageLink(url);
         this.value = '';
     }
 });
@@ -174,5 +192,9 @@ controls.randomButton.addEventListener('click', () => setRandomImage());
 controls.uploadButton.addEventListener('click', () => {
     controls.fileInput.click();
 });
+
+controls.medianCutButton.addEventListener('click', () => applyMedianCut(getCurrentImage()));
+controls.kMeansButton.addEventListener('click', () => applyKMeans(getCurrentImage()));
+controls.histogramButton.addEventListener('click', () => applyHistogram(getCurrentImage()));
 
 setRandomImage();

@@ -1,14 +1,14 @@
 const urls = {
     random: 'https://picsum.photos/600/400',
-    cosmos: 'images/cosmos.jpg',
 };
-    
 
 const imageContainer = document.getElementById('image-container');
 const medianСontainer = document.getElementById('median-container');
 const kMeansСontainer = document.getElementById('k-means-container');
 const controls = {
-    random: document.getElementById('control-random'),
+    randomButton: document.getElementById('control-random'),
+    uploadButton: document.getElementById('control-upload'),
+    fileInput: document.getElementById('file-input'),
 }
 
 function copyToClipboard(text) {
@@ -132,7 +132,16 @@ function setRandomImage() {
     setImage(imageLink);
 }
 
-controls.random.addEventListener('click', () => setRandomImage());
+controls.fileInput.addEventListener('change', function() {
+    if (this.files && this.files[0]) {
+        const url = URL.createObjectURL(this.files[0]);
+        setImage(url);
+    }
+});
+
+controls.randomButton.addEventListener('click', () => setRandomImage());
+controls.uploadButton.addEventListener('click', () => {
+    controls.fileInput.click();
+});
 
 setRandomImage();
-// setImage(urls.cosmos);

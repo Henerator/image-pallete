@@ -50,7 +50,12 @@ function loadImagePixels(url, onSuccess) {
 
         const pixels = [];
         const countPixels = imageData.width * imageData.height;
-        for (let x = 0; x < countPixels; x++) {
+
+        const ratioCuntPixels = 600 * 400;
+        const ratio = Math.min(Math.floor(countPixels / ratioCuntPixels), 5);
+        const pixelStep = Math.pow(2, ratio);
+
+        for (let x = 0; x < countPixels; x += pixelStep) {
             const index = x * 4;
             pixels.push([
                 imageData.data[index],
@@ -136,6 +141,7 @@ controls.fileInput.addEventListener('change', function() {
     if (this.files && this.files[0]) {
         const url = URL.createObjectURL(this.files[0]);
         setImage(url);
+        this.value = '';
     }
 });
 

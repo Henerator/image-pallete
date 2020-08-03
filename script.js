@@ -1,12 +1,20 @@
+const classNames = {
+    bodyDark: 'body_dark',
+    controlItem: 'color-item',
+    controlItemActive: 'control-item_active',
+    controlItemDark: 'color-item_dark',
+}
+
 const urls = {
     random: 'https://picsum.photos/600/400',
-};
+}
 
 const containers = {
     content: document.getElementById('content'),
     image: document.getElementById('image-container'),
     colors: document.getElementById('colors-container'),
 }
+
 const controls = {
     randomButton: document.getElementById('control-random'),
     uploadButton: document.getElementById('control-upload'),
@@ -14,6 +22,22 @@ const controls = {
     kMeansButton: document.getElementById('control-k-means'),
     histogramButton: document.getElementById('control-histogram'),
     fileInput: document.getElementById('file-input'),
+}
+
+let currentClusteringMode;
+const clusteringModes = {
+    medianCut: {
+        button: controls.medianCutButton,
+        action: applyMedianCut,
+    },
+    kMeans: {
+        button: controls.kMeansButton,
+        action: applyKMeans,
+    },
+    histogram: {
+        button: controls.histogramButton,
+        action: applyHistogram,
+    },
 }
 
 function copyToClipboard(text) {
@@ -27,7 +51,16 @@ function copyToClipboard(text) {
     textarea.select();
     document.execCommand('copy');
     document.body.removeChild(textarea);
-};
+}
+
+function setClusteringMode(mode) {
+    currentClusteringMode = mode;
+
+    Object.values(clusteringModes).forEach(clusteringMode => {
+        clusteringMode.button.classList.remove(classNames.controlItemActive);
+    });
+    currentClusteringMode.button.classList.add(classNames.controlItemActive);
+}
 
 function loadImage(url, onSuccess) {
     const imageElement = new Image();
@@ -112,8 +145,8 @@ function createColorElement(pixel) {
     element.addEventListener('click', () => copyToClipboard(hexString));
     element.innerText = hexString;
     element.style.background = rgbString;
-    element.classList.add('color-item');
-    colorLightness > 0.5 && element.classList.add('color-item_dark');
+    element.classList.add(classNames.controlItem);
+    colorLightness > 0.5 && element.classList.add(classNames.controlItemDark);
 
     return element;
 }
@@ -130,8 +163,8 @@ function updateColors(clusters) {
             const mainColorLightness = getColorLightness(pixel);
             document.body.style.background = mainColorHex;
             mainColorLightness > 0.5
-                ? document.body.classList.add('body_theme_dark')
-                : document.body.classList.remove('body_theme_dark');
+                ? document.body.classList.add(classNames.bodyDark)
+                : document.body.classList.remove(classNames.bodyDark);
         }
     });
 
@@ -171,7 +204,7 @@ function applyHistogram(image) {
 
 function setImageLink(url) {
     loadImage(url, image => {
-        applyHistogram(image);
+        currentClusteringMode.action(image);
     });
 }
 
@@ -189,12 +222,14 @@ controls.fileInput.addEventListener('change', function () {
 });
 
 controls.randomButton.addEventListener('click', () => setRandomImage());
-controls.uploadButton.addEventListener('click', () => {
-    controls.fileInput.click();
+controls.uploadButton.addEventListener('click', () => controls.fileInput.click());
+
+Object.values(clusteringModes).forEach(clusteringMode => {
+    clusteringMode.button.addEventListener('click', () => {
+        setClusteringMode(clusteringMode);
+        clusteringMode.action(getCurrentImage());
+    });
 });
 
-controls.medianCutButton.addEventListener('click', () => applyMedianCut(getCurrentImage()));
-controls.kMeansButton.addEventListener('click', () => applyKMeans(getCurrentImage()));
-controls.histogramButton.addEventListener('click', () => applyHistogram(getCurrentImage()));
-
+setClusteringMode(clusteringModes.histogram);
 setRandomImage();

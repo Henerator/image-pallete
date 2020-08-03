@@ -25,23 +25,23 @@ body {
     transition: background 1s ease;
 }
 
-.body_theme_dark .content {
+.body_dark .content {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
-.body_theme_dark .controls {
+.body_dark .controls {
     color: var(--color-text-dark);
 }
 
-.body_theme_dark .gratitude {
+.body_dark .gratitude {
     color: var(--color-text-dark);
 }
 
-.body_theme_dark .gratitude a {
+.body_dark .gratitude a {
     color: var(--color-text-dark);
 }
 
-.body_theme_dark .control_divider {
+.body_dark .control-divider {
     background: var(--color-text-dark);
 }
 
@@ -126,12 +126,16 @@ img {
     transition: color 1s ease;
 }
 
-.control_item {
+.control-item {
     padding: 12px;
     cursor: pointer;
 }
 
-.control_divider {
+.control-item_active {
+    font-weight: bold;
+}
+
+.control-divider {
     width: 1px;
     height: 20px;
     margin: 0 12px;
